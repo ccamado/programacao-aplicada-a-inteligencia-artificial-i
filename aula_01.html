@@ -120,30 +120,133 @@
     <a href="index.html" class="btn-back" style="margin:0 auto">← Voltar ao Menu</a>
   </div>
 </div>
+
 <script>
-function marcarResposta(botao, correto){
-  const card = botao.closest('.card');
-  const botoes = card.querySelectorAll('button');
-  botoes.forEach(b => b.disabled = true);
-  const feedback = card.querySelector('.feedback');
-  if(correto){
-    botao.style.background = '#DCFCE7';
-    botao.style.color = '#166534';
-    feedback.textContent = '✅ Acertou! Muito bem.';
-    feedback.style.color = '#BBF7D0';
-  } else {
-    botao.style.background = '#FEE2E2';
-    botao.style.color = '#991B1B';
-    feedback.textContent = '❌ Quase! Revise a explicação da aula e tente aprender com o erro.';
-    feedback.style.color = '#FECACA';
-    botoes.forEach(b => {
-      if (b.getAttribute('onclick').includes('true')) {
-        b.style.background = '#DCFCE7';
-        b.style.color = '#166534';
-      }
-    });
+(function(){
+  const quizSection = document.querySelector('.quiz-section');
+  if(!quizSection) return;
+
+  const cards = Array.from(quizSection.querySelectorAll('.card'));
+  cards.forEach((card, index) => {
+    card.classList.add('question-card');
+    card.dataset.question = String(index + 1);
+    card.querySelectorAll('button').forEach(btn => btn.classList.add('quiz-option'));
+  });
+
+  const total = cards.length;
+  let respondidas = 0;
+  let acertos = 0;
+  let erros = 0;
+
+  const hud = document.createElement('div');
+  hud.className = 'quiz-game-header';
+  hud.innerHTML = `
+    <div class="quiz-stats">
+      <div class="quiz-stat"><strong id="quiz-score">0</strong><span>Pontos</span></div>
+      <div class="quiz-stat"><strong id="quiz-right">0/${total}</strong><span>Acertos</span></div>
+      <div class="quiz-stat"><strong id="quiz-done">0/${total}</strong><span>Respondidas</span></div>
+      <div class="quiz-stat"><strong id="quiz-rank">🌱 Início</strong><span>Nível</span></div>
+    </div>
+    <div class="quiz-progress-wrap"><div id="quiz-progress" class="quiz-progress-bar"></div></div>
+    <div class="quiz-status-line">
+      <span id="quiz-message">Responda e acompanhe seu avanço!</span>
+      <span id="quiz-streak">Meta: acertar 7 ou mais.</span>
+    </div>
+  `;
+  const finalBox = document.createElement('div');
+  finalBox.className = 'quiz-final';
+  finalBox.id = 'quiz-final';
+  finalBox.innerHTML = `
+    <h3>🏁 Quiz concluído!</h3>
+    <p id="quiz-final-text"></p>
+    <button class="quiz-restart" onclick="reiniciarQuiz()">🔄 Tentar de novo</button>
+  `;
+  quizSection.insertBefore(hud, cards[0] || null);
+  quizSection.appendChild(finalBox);
+
+  function calcularNivel(){
+    const percentual = total ? (acertos / total) : 0;
+    if(percentual === 1) return '👑 Mestre';
+    if(percentual >= 0.8) return '🏆 Ouro';
+    if(percentual >= 0.6) return '🥈 Prata';
+    if(percentual >= 0.4) return '🥉 Bronze';
+    return '🌱 Início';
   }
-}
+
+  function atualizarHUD(){
+    document.getElementById('quiz-score').textContent = String(acertos * 10);
+    document.getElementById('quiz-right').textContent = `${acertos}/${total}`;
+    document.getElementById('quiz-done').textContent = `${respondidas}/${total}`;
+    document.getElementById('quiz-rank').textContent = calcularNivel();
+    document.getElementById('quiz-progress').style.width = `${(respondidas/total)*100}%`;
+    const faltam = Math.max(0, 7 - acertos);
+    document.getElementById('quiz-streak').textContent = faltam === 0 ? 'Meta cumprida! 🎉' : `Faltam ${faltam} acerto(s) para a meta.`;
+  }
+
+  function finalizarQuiz(){
+    const percentual = Math.round((acertos / total) * 100);
+    let mensagem = '';
+    if (percentual === 100) mensagem = 'Excelente! Você dominou o conteúdo desta aula.';
+    else if (percentual >= 80) mensagem = 'Muito bom! Você está bem preparado e compreendeu os pontos principais.';
+    else if (percentual >= 60) mensagem = 'Bom trabalho! Revise alguns pontos e você melhora ainda mais.';
+    else mensagem = 'Vale a revisão. Releia os cards da aula e tente novamente.';
+    document.getElementById('quiz-final-text').innerHTML = `Você fez <strong>${acertos} de ${total}</strong> acertos (${percentual}%).<br>${mensagem}`;
+    finalBox.classList.add('show');
+    document.getElementById('quiz-message').textContent = 'Quiz finalizado! Veja seu resultado abaixo.';
+  }
+
+  window.marcarResposta = function(botao, correto){
+    const card = botao.closest('.card');
+    if (!card || card.dataset.answered === '1') return;
+    card.dataset.answered = '1';
+    const botoes = card.querySelectorAll('button');
+    botoes.forEach(b => b.disabled = true);
+    const feedback = card.querySelector('.feedback');
+    respondidas += 1;
+
+    if(correto){
+      acertos += 1;
+      botao.classList.add('correta');
+      feedback.textContent = '✅ Acertou! Você somou 10 pontos.';
+      feedback.classList.add('ok');
+      document.getElementById('quiz-message').textContent = 'Boa! Continue assim.';
+    } else {
+      erros += 1;
+      botao.classList.add('errada');
+      feedback.textContent = '❌ Resposta incorreta. A correta foi destacada em verde.';
+      feedback.classList.add('nope');
+      botoes.forEach(b => {
+        const fn = b.getAttribute('onclick') || '';
+        if (fn.includes('true')) b.classList.add('correta');
+      });
+      document.getElementById('quiz-message').textContent = 'Sem problema: aprenda com o feedback e avance.';
+    }
+
+    atualizarHUD();
+    if(respondidas === total) finalizarQuiz();
+  }
+
+  window.reiniciarQuiz = function(){
+    cards.forEach(card => {
+      card.dataset.answered = '0';
+      const feedback = card.querySelector('.feedback');
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      card.querySelectorAll('button').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('correta', 'errada');
+      });
+    });
+    respondidas = 0; acertos = 0; erros = 0;
+    finalBox.classList.remove('show');
+    document.getElementById('quiz-message').textContent = 'Responda e acompanhe seu avanço!';
+    atualizarHUD();
+    window.scrollTo({top: quizSection.offsetTop - 20, behavior: 'smooth'});
+  }
+
+  atualizarHUD();
+})();
 </script>
+
 </body>
 </html>
