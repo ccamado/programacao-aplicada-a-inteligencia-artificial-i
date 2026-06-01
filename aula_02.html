@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandas inicial: abrir a base e fazer a primeira inspeção — Programação Aplicada à IA I</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="index.html" class="btn-back">← Voltar ao Menu</a>
+<div class="aula-container">
+  <div class="aula-hero">
+    <div class="aula-num">Aula Revisão</div>
+    <h1>🐼 Pandas inicial: abrir a base e fazer a primeira inspeção</h1>
+    <div class="aula-meta">
+      <span>📅 05/05/2026</span>
+      <span>⏱ 50 min</span>
+      <span>🎯 Central de Avisos</span>
+      <span>📚 Programação Aplicada à Inteligência Artificial I</span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🎯 O que vamos aprender?</h2>
+    <p>Nesta aula, vamos fazer o primeiro contato com o Pandas e entender como abrir uma tabela da Central de Avisos para observar linhas, colunas e valores. A proposta é enxergar a base como um conjunto organizado de registros.</p>
+    <div class="destaque">💡 Aplicação no projeto: Usar o Pandas para visualizar as colunas da base e identificar observações iniciais sobre os dados da Central.</div>
+  </div>
+  <div class="card roxo">
+    <h2>📘 Conteúdo principal</h2>
+    <div class="conceito-box"><strong>Conceito central:</strong> Primeira leitura técnica da base</div>
+    <p>Pandas é uma biblioteca do Python muito usada para manipular e analisar dados. Quando abrimos uma planilha ou tabela com Pandas, ela costuma aparecer em formato de DataFrame, que é como uma tabela com linhas e colunas. No projeto Central de Avisos, esse passo é importante porque permite ver se os registros estão completos, se as colunas fazem sentido e se existe algum padrão visível logo no início. A primeira inspeção não é uma análise profunda; é uma leitura inicial para responder perguntas como: quantas colunas existem? Quais nomes aparecem? Há dados vazios? Os formatos parecem consistentes? Essa observação prepara a turma para as próximas etapas de limpeza e organização.</p>
+  </div>
+  
+  <div class="card azul">
+    <h2>🧠 Exemplos práticos</h2>
+    <p>No quadro ou no notebook, vale destacar:<br>• coluna = tipo de informação;<br>• linha = um registro de aviso;<br>• DataFrame = tabela organizada para leitura;<br>• inspeção inicial = olhar a base antes de tentar analisá-la.</p>
+  </div>
+  <div class="card verde">
+    <h2>🚀 Microproduto da aula</h2>
+    <p>Microproduto: tabela-resumo com nomes das colunas e 3 observações reais sobre a base.</p>
+  </div>
+<div class="caderno-section">
+    <h3>📝 Resumo para o Caderno — Pandas inicial: abrir a base e fazer a primeira inspeção</h3>
+    <ol>
+      <li>Pandas é uma biblioteca para manipular e analisar dados.</li>
+      <li>No Pandas, a tabela costuma ser chamada de DataFrame.</li>
+      <li>Linhas representam registros.</li>
+      <li>Colunas representam tipos de informação.</li>
+      <li>Abrir a base é o primeiro passo antes da análise.</li>
+      <li>A inspeção inicial mostra como os dados estão organizados.</li>
+      <li>É importante observar nomes de colunas e formatos.</li>
+      <li>Também devemos verificar se há valores vazios.</li>
+      <li>No projeto, cada linha pode representar um aviso da Central.</li>
+      <li>Inspecionar a base ajuda a preparar a etapa de limpeza.</li>
+    </ol>
+  </div>
+  <div class="quiz-section">
+    <h2>🎮 Quiz — Pandas inicial: abrir a base e fazer a primeira inspeção</h2>
+    <p style="opacity:0.8;margin-bottom:16px">10 questões para testar seu conhecimento!</p>
+  <div class="card verde"><h2>❓ Questão 1</h2><p style="margin-bottom:14px">Qual é a ideia central da aula &quot;Pandas inicial: abrir a base e fazer a primeira inspeção&quot;?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Primeira leitura técnica da base</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Aprender a programar jogos em 3D</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Trocar o projeto da disciplina</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Estudar apenas regras gramaticais</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 2</h2><p style="margin-bottom:14px">No contexto desta aula, a aplicação no projeto Central de Avisos é:</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Ignorar a base e responder por adivinhação</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Usar o Pandas para visualizar as colunas da base e identificar observações iniciais sobre os dados da Central.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Substituir a planilha por desenhos aleatórios</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Apagar todos os registros antigos</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 3</h2><p style="margin-bottom:14px">Qual conceito faz parte do foco desta aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Fotossíntese</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Revolução Francesa</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Pandas</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Globalização econômica</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 4</h2><p style="margin-bottom:14px">Qual conceito também aparece nesta aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Mitocôndria</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Rima poética</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Placas tectônicas</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) DataFrame</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 5</h2><p style="margin-bottom:14px">Segundo o conteúdo da aula, o microproduto esperado é:</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Microproduto: tabela-resumo com nomes das colunas e 3 observações reais sobre a base.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Uma redação sobre férias escolares</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Uma maquete da escola inteira</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Um experimento de química</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 6</h2><p style="margin-bottom:14px">Qual resumo abaixo combina com esta aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Toda análise de dados deve ignorar a organização da base</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Pandas é uma biblioteca para manipular e analisar dados.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Gráficos substituem completamente a interpretação</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) O projeto não precisa de perguntas nem registros</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 7</h2><p style="margin-bottom:14px">Qual afirmação está correta de acordo com a aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Todo aviso tem o mesmo significado e a mesma urgência</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) A base nunca precisa ser revisada</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Abrir a base é o primeiro passo antes da análise.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Dados numéricos não podem ser comparados</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 8</h2><p style="margin-bottom:14px">Qual ideia ajuda a entender o trabalho desta aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) O sistema deve inventar informações ausentes</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Os dados não precisam de contexto</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A análise sempre começa no algoritmo</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Também devemos verificar se há valores vazios.</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 9</h2><p style="margin-bottom:14px">Pensando na Central de Avisos, qual frase faz mais sentido aqui?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) No projeto, cada linha pode representar um aviso da Central.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) O projeto não precisa estar ligado à rotina escolar</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A interpretação dos dados deve ser aleatória</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Nenhuma coluna da base tem utilidade</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+<div class="card verde"><h2>❓ Questão 10</h2><p style="margin-bottom:14px">Qual frase resume melhor o fechamento desta aula?</p><div style="display:grid;gap:10px">
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) A disciplina não trabalha com dados</button>
+<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Inspecionar a base ajuda a preparar a etapa de limpeza.</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A aula não tem relação com a Central de Avisos</button>
+<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) O bimestre não exige microprodutos</button>
+</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
+  <div style="text-align:center;margin-top:24px">
+    <a href="index.html" class="btn-back" style="margin:0 auto">← Voltar ao Menu</a>
+  </div>
+</div>
+<script>
+function marcarResposta(botao, correto){
+  const card = botao.closest('.card');
+  const botoes = card.querySelectorAll('button');
+  botoes.forEach(b => b.disabled = true);
+  const feedback = card.querySelector('.feedback');
+  if(correto){
+    botao.style.background = '#DCFCE7';
+    botao.style.color = '#166534';
+    feedback.textContent = '✅ Acertou! Muito bem.';
+    feedback.style.color = '#BBF7D0';
+  } else {
+    botao.style.background = '#FEE2E2';
+    botao.style.color = '#991B1B';
+    feedback.textContent = '❌ Quase! Revise a explicação da aula e tente aprender com o erro.';
+    feedback.style.color = '#FECACA';
+    botoes.forEach(b => {
+      if (b.getAttribute('onclick').includes('true')) {
+        b.style.background = '#DCFCE7';
+        b.style.color = '#166534';
+      }
+    });
+  }
+}
+</script>
+</body>
+</html>
