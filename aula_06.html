@@ -5,6 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Operações com Numpy e leitura quantitativa da base — Programação Aplicada à IA I</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.quiz-hud{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:18px;margin-bottom:18px}
+.quiz-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.quiz-stat{background:rgba(255,255,255,.14);border-radius:14px;padding:12px 10px;text-align:center}
+.quiz-stat strong{display:block;color:#fff;font-size:1.15rem}
+.quiz-stat span{display:block;color:rgba(255,255,255,.88);font-size:.82rem;margin-top:4px}
+.quiz-progress-wrap{margin-top:14px;height:12px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden}
+.quiz-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#FBBF24,#22C55E);border-radius:999px;transition:width .35s ease}
+.quiz-status-line{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:.9rem;color:#fff}
+.quiz-section .question-card{background:#fff;color:#1F0A3C;border-left:6px solid #A855F7;transition:transform .2s ease, box-shadow .2s ease}
+.quiz-section .question-card:hover{transform:translateY(-2px)}
+.quiz-question-title{color:#3B0764 !important;font-size:1.08rem;margin-bottom:10px}
+.quiz-question-text{color:#1F0A3C !important;font-weight:700;line-height:1.55;margin-bottom:14px !important}
+.quiz-options-wrap{display:grid !important;gap:10px}
+.quiz-option{width:100%;text-align:left;padding:14px 16px;border-radius:14px;border:none;background:#fff;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .2s ease, color .2s ease}
+.quiz-option:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(107,33,168,.18);background:#F5F3FF}
+.quiz-option.is-disabled{cursor:default;opacity:1}
+.quiz-option.is-correct{background:#DCFCE7 !important;color:#166534 !important;border:2px solid #22C55E}
+.quiz-option.is-wrong{background:#FEE2E2 !important;color:#991B1B !important;border:2px solid #EF4444}
+.quiz-section .question-card.is-correct{border-left-color:#22C55E}
+.quiz-section .question-card.is-wrong{border-left-color:#EF4444}
+.quiz-final{display:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:20px;margin-top:18px;text-align:center;color:#fff}
+.quiz-final h3{margin-bottom:8px;color:#fff}
+.quiz-final p{color:#fff;line-height:1.6}
+.quiz-restart{margin-top:14px;background:#fff;color:#6B21A8;font-weight:800;border:none;border-radius:999px;padding:12px 22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.quiz-restart:hover{transform:translateY(-1px)}
+@media (max-width:700px){
+  .quiz-stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 <body>
 <a href="index.html" class="btn-back">← Voltar ao Menu</a>
@@ -120,30 +150,156 @@
     <a href="index.html" class="btn-back" style="margin:0 auto">← Voltar ao Menu</a>
   </div>
 </div>
+
 <script>
-function marcarResposta(botao, correto){
-  const card = botao.closest('.card');
-  const botoes = card.querySelectorAll('button');
-  botoes.forEach(b => b.disabled = true);
-  const feedback = card.querySelector('.feedback');
-  if(correto){
-    botao.style.background = '#DCFCE7';
-    botao.style.color = '#166534';
-    feedback.textContent = '✅ Acertou! Muito bem.';
-    feedback.style.color = '#BBF7D0';
-  } else {
-    botao.style.background = '#FEE2E2';
-    botao.style.color = '#991B1B';
-    feedback.textContent = '❌ Quase! Revise a explicação da aula e tente aprender com o erro.';
-    feedback.style.color = '#FECACA';
-    botoes.forEach(b => {
-      if (b.getAttribute('onclick').includes('true')) {
-        b.style.background = '#DCFCE7';
-        b.style.color = '#166534';
-      }
+(function(){
+  const quizSection = document.querySelector('.quiz-section');
+  if(!quizSection) return;
+
+  const cards = Array.from(quizSection.querySelectorAll('.card'));
+  cards.forEach((card, index) => {
+    card.classList.add('question-card');
+    card.dataset.question = String(index + 1);
+
+    const title = card.querySelector('h2');
+    if (title) title.classList.add('quiz-question-title');
+
+    const questionText = card.querySelector('p');
+    if (questionText) questionText.classList.add('quiz-question-text');
+
+    const optionsWrap = card.querySelector('div');
+    if (optionsWrap) optionsWrap.classList.add('quiz-options-wrap');
+
+    card.querySelectorAll('button').forEach((btn, btnIndex) => {
+      btn.classList.add('quiz-option');
+      btn.dataset.option = String(btnIndex + 1);
+      btn.removeAttribute('style');
     });
+  });
+
+  const total = cards.length;
+  let respondidas = 0;
+  let acertos = 0;
+  let erros = 0;
+
+  const hud = document.createElement('div');
+  hud.className = 'quiz-hud';
+  hud.innerHTML = `
+    <div class="quiz-stats">
+      <div class="quiz-stat"><strong id="quiz-score">0</strong><span>Pontos</span></div>
+      <div class="quiz-stat"><strong id="quiz-right">0/${total}</strong><span>Acertos</span></div>
+      <div class="quiz-stat"><strong id="quiz-done">0/${total}</strong><span>Respondidas</span></div>
+      <div class="quiz-stat"><strong id="quiz-rank">🌱 Início</strong><span>Nível</span></div>
+    </div>
+    <div class="quiz-progress-wrap"><div id="quiz-progress" class="quiz-progress-bar"></div></div>
+    <div class="quiz-status-line">
+      <span id="quiz-message">Responda e acompanhe seu avanço!</span>
+      <span id="quiz-streak">Meta: acertar 7 ou mais.</span>
+    </div>
+  `;
+
+  const finalBox = document.createElement('div');
+  finalBox.className = 'quiz-final';
+  finalBox.id = 'quiz-final';
+  finalBox.innerHTML = `
+    <h3>🏁 Quiz concluído!</h3>
+    <p id="quiz-final-text"></p>
+    <button class="quiz-restart" onclick="reiniciarQuiz()">🔄 Tentar de novo</button>
+  `;
+
+  quizSection.insertBefore(hud, cards[0] || null);
+  quizSection.appendChild(finalBox);
+
+  function calcularNivel(){
+    const percentual = total ? (acertos / total) : 0;
+    if (percentual === 1) return '👑 Mestre';
+    if (percentual >= 0.8) return '🏆 Ouro';
+    if (percentual >= 0.6) return '🥈 Prata';
+    if (percentual >= 0.4) return '🥉 Bronze';
+    return '🌱 Início';
   }
-}
+
+  function atualizarHUD(){
+    const score = acertos * 10;
+    const percentual = total ? (respondidas / total) * 100 : 0;
+    document.getElementById('quiz-score').textContent = String(score);
+    document.getElementById('quiz-right').textContent = `${acertos}/${total}`;
+    document.getElementById('quiz-done').textContent = `${respondidas}/${total}`;
+    document.getElementById('quiz-rank').textContent = calcularNivel();
+    document.getElementById('quiz-progress').style.width = `${percentual}%`;
+
+    let message = 'Continue! Você está avançando.';
+    if (respondidas === 0) message = 'Responda e acompanhe seu avanço!';
+    else if (acertos === respondidas) message = 'Excelente! Você acertou todas até agora.';
+    else if (acertos >= Math.ceil(respondidas / 2)) message = 'Bom trabalho! Você está indo bem.';
+    else message = 'Siga firme! Revise e tente melhorar nas próximas.';
+    document.getElementById('quiz-message').textContent = message;
+    document.getElementById('quiz-streak').textContent = `Erros: ${erros} • Questões restantes: ${total - respondidas}`;
+  }
+
+  function finalizarQuiz(){
+    const finalBoxEl = document.getElementById('quiz-final');
+    const finalText = document.getElementById('quiz-final-text');
+    const percentual = total ? Math.round((acertos / total) * 100) : 0;
+
+    let mensagemFinal = `Você fez ${acertos} de ${total} pontos (${percentual}%). `;
+    if (percentual === 100) mensagemFinal += 'Desempenho perfeito! A Central de Avisos está em ótimas mãos.';
+    else if (percentual >= 80) mensagemFinal += 'Ótimo resultado! Você dominou muito bem o conteúdo.';
+    else if (percentual >= 60) mensagemFinal += 'Bom resultado! Vale revisar alguns pontos para avançar ainda mais.';
+    else mensagemFinal += 'Você começou bem. Revise o conteúdo e tente novamente para subir de nível.';
+    finalText.textContent = mensagemFinal;
+    finalBoxEl.style.display = 'block';
+  }
+
+  window.marcarResposta = function(botao, correta){
+    const card = botao.closest('.question-card');
+    if (!card || card.dataset.locked === 'true') return;
+
+    card.dataset.locked = 'true';
+    respondidas += 1;
+
+    const botoes = card.querySelectorAll('button');
+    botoes.forEach(btn => {
+      btn.disabled = true;
+      btn.classList.add('is-disabled');
+    });
+
+    if (correta) {
+      acertos += 1;
+      botao.classList.add('is-correct');
+      card.classList.add('is-correct');
+    } else {
+      erros += 1;
+      botao.classList.add('is-wrong');
+      card.classList.add('is-wrong');
+      const corretaBtn = Array.from(botoes).find(btn => /true\)/.test(btn.getAttribute('onclick') || ''));
+      if (corretaBtn) corretaBtn.classList.add('is-correct');
+    }
+
+    atualizarHUD();
+    if (respondidas === total) finalizarQuiz();
+  };
+
+  window.reiniciarQuiz = function(){
+    respondidas = 0;
+    acertos = 0;
+    erros = 0;
+    cards.forEach(card => {
+      card.dataset.locked = 'false';
+      card.classList.remove('is-correct', 'is-wrong');
+      card.querySelectorAll('button').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('is-disabled', 'is-correct', 'is-wrong');
+      });
+    });
+    document.getElementById('quiz-final').style.display = 'none';
+    atualizarHUD();
+    window.scrollTo({ top: quizSection.offsetTop - 16, behavior: 'smooth' });
+  };
+
+  atualizarHUD();
+})();
 </script>
+
 </body>
 </html>
