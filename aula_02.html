@@ -3,301 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pandas inicial: abrir a base e fazer a primeira inspeção — Programação Aplicada à IA I</title>
+<title>Aula 02 - Primeiro contato com Pandas e inspeção inicial da base</title>
 <link rel="stylesheet" href="style.css">
+
 <style>
-.quiz-hud{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:18px;margin-bottom:18px}
-.quiz-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.quiz-stat{background:rgba(255,255,255,.14);border-radius:14px;padding:12px 10px;text-align:center}
-.quiz-stat strong{display:block;color:#fff;font-size:1.15rem}
-.quiz-stat span{display:block;color:rgba(255,255,255,.88);font-size:.82rem;margin-top:4px}
-.quiz-progress-wrap{margin-top:14px;height:12px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden}
-.quiz-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#FBBF24,#22C55E);border-radius:999px;transition:width .35s ease}
-.quiz-status-line{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:.9rem;color:#fff}
-.quiz-section .question-card{background:#fff;color:#1F0A3C;border-left:6px solid #A855F7;transition:transform .2s ease, box-shadow .2s ease}
-.quiz-section .question-card:hover{transform:translateY(-2px)}
-.quiz-question-title{color:#3B0764 !important;font-size:1.08rem;margin-bottom:10px}
-.quiz-question-text{color:#1F0A3C !important;font-weight:700;line-height:1.55;margin-bottom:14px !important}
-.quiz-options-wrap{display:grid !important;gap:10px}
-.quiz-option{width:100%;text-align:left;padding:14px 16px;border-radius:14px;border:none;background:#fff;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .2s ease, color .2s ease}
-.quiz-option:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(107,33,168,.18);background:#F5F3FF}
-.quiz-option.is-disabled{cursor:default;opacity:1}
-.quiz-option.is-correct{background:#DCFCE7 !important;color:#166534 !important;border:2px solid #22C55E}
-.quiz-option.is-wrong{background:#FEE2E2 !important;color:#991B1B !important;border:2px solid #EF4444}
-.quiz-section .question-card.is-correct{border-left-color:#22C55E}
-.quiz-section .question-card.is-wrong{border-left-color:#EF4444}
-.quiz-final{display:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:20px;margin-top:18px;text-align:center;color:#fff}
-.quiz-final h3{margin-bottom:8px;color:#fff}
-.quiz-final p{color:#fff;line-height:1.6}
-.quiz-restart{margin-top:14px;background:#fff;color:#6B21A8;font-weight:800;border:none;border-radius:999px;padding:12px 22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15)}
-.quiz-restart:hover{transform:translateY(-1px)}
+.quiz-wrap{margin-top:18px}
+.quiz-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.quiz-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:14px;text-align:center}
+.quiz-stat strong{display:block;font-size:1.3rem;color:#fff}
+.quiz-stat span{font-size:.78rem;color:rgba(255,255,255,.86);text-transform:uppercase;letter-spacing:.8px}
+.progress-wrap{margin:16px 0 8px}
+.progress-bar{height:14px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#fbbf24,#22c55e);transition:width .3s ease}
+.progress-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.88rem;color:#fff;margin-top:8px}
+.performance-msg{margin-top:10px;background:rgba(255,255,255,.10);border-left:4px solid #fbbf24;padding:10px 12px;border-radius:0 12px 12px 0;color:#fff;font-weight:700}
+.quiz-card{background:#fff;color:#1F0A3C;border-radius:18px;padding:18px;margin:16px 0;box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.quiz-card h4{color:#1F0A3C;font-size:1rem;line-height:1.5;margin-bottom:12px}
+.quiz-options{display:grid;gap:10px}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:14px;border:2px solid #E5E7EB;background:#fff;cursor:pointer;transition:.2s ease;color:#1F0A3C}
+.quiz-option:hover{border-color:#A855F7;background:#faf5ff}
+.quiz-option .letter{min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;background:#F3F4F6;color:#1F0A3C}
+.quiz-option .opt-text{color:#1F0A3C;font-weight:600;line-height:1.45}
+.quiz-option.correct{border-color:#22C55E;background:#F0FDF4}
+.quiz-option.correct .letter{background:#22C55E;color:#fff}
+.quiz-option.wrong{border-color:#EF4444;background:#FEF2F2}
+.quiz-option.wrong .letter{background:#EF4444;color:#fff}
+.quiz-option.disabled{cursor:default;opacity:.95}
+.quiz-feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-weight:700;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:#dcfce7;color:#166534}
+.quiz-feedback.wrong{background:#fee2e2;color:#991b1b}
+.quiz-footer{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:18px}
+.quiz-result{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:14px;color:#fff;display:none}
+.quiz-result.show{display:block}
+.quiz-btn{background:#fff;color:#6B21A8;border:none;border-radius:999px;padding:12px 20px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.quiz-btn:hover{transform:translateY(-1px)}
 @media (max-width:700px){
-  .quiz-stats{grid-template-columns:repeat(2,1fr)}
+  .quiz-dashboard{grid-template-columns:repeat(2,1fr)}
+  .progress-meta{flex-direction:column;align-items:flex-start}
 }
 </style>
+
 </head>
 <body>
 <a href="index.html" class="btn-back">← Voltar ao Menu</a>
 <div class="aula-container">
   <div class="aula-hero">
-    <div class="aula-num">Aula Revisão</div>
-    <h1>🐼 Pandas inicial: abrir a base e fazer a primeira inspeção</h1>
+    <div class="aula-num">AULA 02 · REVISÃO</div>
+    <h1>🐼 Primeiro contato com Pandas e inspeção inicial da base</h1>
     <div class="aula-meta">
       <span>📅 05/05/2026</span>
       <span>⏱ 50 min</span>
       <span>🎯 Central de Avisos</span>
-      <span>📚 Programação Aplicada à Inteligência Artificial I</span>
+      <span>📚 Programação Aplicada à IA I</span>
     </div>
   </div>
+
   <div class="card">
     <h2>🎯 O que vamos aprender?</h2>
-    <p>Nesta aula, vamos fazer o primeiro contato com o Pandas e entender como abrir uma tabela da Central de Avisos para observar linhas, colunas e valores. A proposta é enxergar a base como um conjunto organizado de registros.</p>
-    <div class="destaque">💡 Aplicação no projeto: Usar o Pandas para visualizar as colunas da base e identificar observações iniciais sobre os dados da Central.</div>
+    <p>Agora que já sabemos quais são as fontes da Central de Avisos, vamos iniciar a leitura das tabelas em Pandas para entender colunas, tipos de informação e problemas visíveis na base.</p>
+    <div class="destaque">💡 Aplicação no projeto: Abrir a base, reconhecer colunas e fazer um diagnóstico inicial da qualidade dos dados da Central.</div>
   </div>
+
+  <div class="grid-2">
+    <div class="card azul">
+      <h2>📦 Microproduto da aula</h2>
+      <p>Tabela-resumo com nome das colunas, tipo de informação e 3 observações sobre a base.</p>
+    </div>
+    <div class="card verde">
+      <h2>🧾 Evidência de aprendizagem</h2>
+      <p>Notebook de inspeção inicial da base da Central de Avisos.</p>
+    </div>
+  </div>
+
   <div class="card roxo">
     <h2>📘 Conteúdo principal</h2>
-    <div class="conceito-box"><strong>Conceito central:</strong> Primeira leitura técnica da base</div>
-    <p>Pandas é uma biblioteca do Python muito usada para manipular e analisar dados. Quando abrimos uma planilha ou tabela com Pandas, ela costuma aparecer em formato de DataFrame, que é como uma tabela com linhas e colunas. No projeto Central de Avisos, esse passo é importante porque permite ver se os registros estão completos, se as colunas fazem sentido e se existe algum padrão visível logo no início. A primeira inspeção não é uma análise profunda; é uma leitura inicial para responder perguntas como: quantas colunas existem? Quais nomes aparecem? Há dados vazios? Os formatos parecem consistentes? Essa observação prepara a turma para as próximas etapas de limpeza e organização.</p>
+    <div class="conceito-box"><strong>Conceito central:</strong> Pandas é a biblioteca usada para abrir, visualizar e inspecionar tabelas, permitindo observar linhas, colunas, campos vazios e formatos diferentes.</div>
+    <p>Pandas é uma biblioteca do Python muito usada para manipular tabelas, chamadas de DataFrames. Em vez de olhar os dados de forma solta, Pandas ajuda a visualizar as primeiras linhas, contar colunas, perceber campos vazios e começar a entender a estrutura da base. No projeto Central de Avisos, isso significa abrir os dados e responder perguntas iniciais como: quantas colunas existem? Quais nomes aparecem? Há datas faltando? Os tipos de aviso estão consistentes? Essa inspeção não resolve tudo, mas prepara a turma para a limpeza e para as análises futuras.</p>
   </div>
-  
-  <div class="card azul">
-    <h2>🧠 Exemplos práticos</h2>
-    <p>No quadro ou no notebook, vale destacar:<br>• coluna = tipo de informação;<br>• linha = um registro de aviso;<br>• DataFrame = tabela organizada para leitura;<br>• inspeção inicial = olhar a base antes de tentar analisá-la.</p>
-  </div>
-  <div class="card verde">
-    <h2>🚀 Microproduto da aula</h2>
-    <p>Microproduto: tabela-resumo com nomes das colunas e 3 observações reais sobre a base.</p>
-  </div>
-<div class="caderno-section">
-    <h3>📝 Resumo para o Caderno — Pandas inicial: abrir a base e fazer a primeira inspeção</h3>
+
+  <div class="caderno-section">
+    <h3>📝 Resumo para o Caderno — Aula 02</h3>
     <ol>
-      <li>Pandas é uma biblioteca para manipular e analisar dados.</li>
-      <li>No Pandas, a tabela costuma ser chamada de DataFrame.</li>
-      <li>Linhas representam registros.</li>
-      <li>Colunas representam tipos de informação.</li>
-      <li>Abrir a base é o primeiro passo antes da análise.</li>
-      <li>A inspeção inicial mostra como os dados estão organizados.</li>
-      <li>É importante observar nomes de colunas e formatos.</li>
-      <li>Também devemos verificar se há valores vazios.</li>
-      <li>No projeto, cada linha pode representar um aviso da Central.</li>
-      <li>Inspecionar a base ajuda a preparar a etapa de limpeza.</li>
+      <li>Pandas é uma biblioteca de Python para abrir e analisar tabelas.</li><li>Uma tabela em Pandas é chamada de DataFrame.</li><li>Inspecionar a base é observar colunas, linhas e tipos de informação.</li><li>As primeiras linhas mostram como os dados foram registrados.</li><li>Campos vazios podem indicar problema de preenchimento.</li><li>Formatos diferentes no mesmo campo atrapalham a análise posterior.</li><li>A inspeção inicial serve para conhecer a estrutura da base.</li><li>Na Central de Avisos, isso ajuda a identificar dados úteis e falhas.</li><li>Antes de limpar, precisamos olhar a base com atenção.</li><li>Pandas ajuda a transformar observação em análise organizada.</li>
     </ol>
   </div>
+
   <div class="quiz-section">
-    <h2>🎮 Quiz — Pandas inicial: abrir a base e fazer a primeira inspeção</h2>
-    <p style="opacity:0.8;margin-bottom:16px">10 questões para testar seu conhecimento!</p>
-  <div class="card verde"><h2>❓ Questão 1</h2><p style="margin-bottom:14px">Qual é a ideia central da aula &quot;Pandas inicial: abrir a base e fazer a primeira inspeção&quot;?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Primeira leitura técnica da base</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Aprender a programar jogos em 3D</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Trocar o projeto da disciplina</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Estudar apenas regras gramaticais</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 2</h2><p style="margin-bottom:14px">No contexto desta aula, a aplicação no projeto Central de Avisos é:</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Ignorar a base e responder por adivinhação</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Usar o Pandas para visualizar as colunas da base e identificar observações iniciais sobre os dados da Central.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Substituir a planilha por desenhos aleatórios</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Apagar todos os registros antigos</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 3</h2><p style="margin-bottom:14px">Qual conceito faz parte do foco desta aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Fotossíntese</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Revolução Francesa</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Pandas</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Globalização econômica</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 4</h2><p style="margin-bottom:14px">Qual conceito também aparece nesta aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Mitocôndria</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Rima poética</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Placas tectônicas</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) DataFrame</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 5</h2><p style="margin-bottom:14px">Segundo o conteúdo da aula, o microproduto esperado é:</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Microproduto: tabela-resumo com nomes das colunas e 3 observações reais sobre a base.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Uma redação sobre férias escolares</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Uma maquete da escola inteira</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Um experimento de química</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 6</h2><p style="margin-bottom:14px">Qual resumo abaixo combina com esta aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Toda análise de dados deve ignorar a organização da base</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Pandas é uma biblioteca para manipular e analisar dados.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Gráficos substituem completamente a interpretação</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) O projeto não precisa de perguntas nem registros</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 7</h2><p style="margin-bottom:14px">Qual afirmação está correta de acordo com a aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) Todo aviso tem o mesmo significado e a mesma urgência</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) A base nunca precisa ser revisada</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) Abrir a base é o primeiro passo antes da análise.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Dados numéricos não podem ser comparados</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 8</h2><p style="margin-bottom:14px">Qual ideia ajuda a entender o trabalho desta aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) O sistema deve inventar informações ausentes</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Os dados não precisam de contexto</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A análise sempre começa no algoritmo</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Também devemos verificar se há valores vazios.</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 9</h2><p style="margin-bottom:14px">Pensando na Central de Avisos, qual frase faz mais sentido aqui?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) No projeto, cada linha pode representar um aviso da Central.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) O projeto não precisa estar ligado à rotina escolar</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A interpretação dos dados deve ser aleatória</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) Nenhuma coluna da base tem utilidade</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-<div class="card verde"><h2>❓ Questão 10</h2><p style="margin-bottom:14px">Qual frase resume melhor o fechamento desta aula?</p><div style="display:grid;gap:10px">
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">A) A disciplina não trabalha com dados</button>
-<button onclick="marcarResposta(this, true)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">B) Inspecionar a base ajuda a preparar a etapa de limpeza.</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">C) A aula não tem relação com a Central de Avisos</button>
-<button onclick="marcarResposta(this, false)" style="text-align:left;padding:14px 16px;border-radius:14px;border:none;background:white;color:#1F0A3C;font-weight:700;box-shadow:0 4px 12px rgba(107,33,168,.12);cursor:pointer">D) O bimestre não exige microprodutos</button>
-</div><div class="feedback" style="margin-top:12px;font-weight:700"></div></div>
-  <div style="text-align:center;margin-top:24px">
-    <a href="index.html" class="btn-back" style="margin:0 auto">← Voltar ao Menu</a>
+    <h2>🎮 Quiz — Primeiro contato com Pandas e inspeção inicial da base</h2>
+    <p style="opacity:0.92;margin-bottom:16px">10 questões para testar seu conhecimento!</p>
+    <div class="quiz-wrap"><div class="quiz-dashboard"><div class="quiz-stat"><strong id="points">0</strong><span>Pontos</span></div><div class="quiz-stat"><strong id="correct">0</strong><span>Acertos</span></div><div class="quiz-stat"><strong id="answered">0</strong><span>Respondidas</span></div><div class="quiz-stat"><strong id="level">0</strong><span>Nível</span></div></div><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><div class="progress-meta"><span>Progresso do quiz</span><span>Erros: <strong id="errorsCount">0</strong></span><span>Restantes: <strong id="remainingCount">10</strong></span></div><div class="performance-msg" id="performanceMsg">Comece o quiz e acompanhe seu desempenho em tempo real!</div></div><div class="quiz-card" data-question="1" data-correct="0"><h4>1. Qual é o foco principal da aula 'Primeiro contato com Pandas e inspeção inicial da base'?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="1" data-option="0"><span class="letter">A</span><span class="opt-text">Pandas é uma biblioteca de Python para abrir e analisar tabelas.</span></button><button type="button" class="quiz-option" data-question="1" data-option="1"><span class="letter">B</span><span class="opt-text">Aprender HTML e CSS do zero.</span></button><button type="button" class="quiz-option" data-question="1" data-option="2"><span class="letter">C</span><span class="opt-text">Estudar redes neurais profundas.</span></button><button type="button" class="quiz-option" data-question="1" data-option="3"><span class="letter">D</span><span class="opt-text">Criar um formulário externo ao projeto.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="2" data-correct="1"><h4>2. No projeto Central de Avisos, esta aula se conecta principalmente a quê?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="2" data-option="0"><span class="letter">A</span><span class="opt-text">À troca do template visual do site.</span></button><button type="button" class="quiz-option" data-question="2" data-option="1"><span class="letter">B</span><span class="opt-text">Abrir a base, reconhecer colunas e fazer um diagnóstico inicial da qualidade dos dados da Central.</span></button><button type="button" class="quiz-option" data-question="2" data-option="2"><span class="letter">C</span><span class="opt-text">À criação de jogos fora da disciplina.</span></button><button type="button" class="quiz-option" data-question="2" data-option="3"><span class="letter">D</span><span class="opt-text">Ao estudo exclusivo de hardware.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="3" data-correct="2"><h4>3. Qual conceito central melhor resume esta aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="3" data-option="0"><span class="letter">A</span><span class="opt-text">Programação orientada a objetos com herança múltipla.</span></button><button type="button" class="quiz-option" data-question="3" data-option="1"><span class="letter">B</span><span class="opt-text">Criação de aplicativos móveis nativos.</span></button><button type="button" class="quiz-option" data-question="3" data-option="2"><span class="letter">C</span><span class="opt-text">Pandas é a biblioteca usada para abrir, visualizar e inspecionar tabelas, permitindo observar linhas, colunas, campos vazios e formatos diferentes.</span></button><button type="button" class="quiz-option" data-question="3" data-option="3"><span class="letter">D</span><span class="opt-text">Montagem física de computadores.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="4" data-correct="3"><h4>4. Qual afirmação está alinhada ao conteúdo da aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="4" data-option="0"><span class="letter">A</span><span class="opt-text">Os dados devem ser ignorados quando parecem repetidos.</span></button><button type="button" class="quiz-option" data-question="4" data-option="1"><span class="letter">B</span><span class="opt-text">Toda análise começa pelo algoritmo final.</span></button><button type="button" class="quiz-option" data-question="4" data-option="2"><span class="letter">C</span><span class="opt-text">A Central de Avisos não precisa de base organizada.</span></button><button type="button" class="quiz-option" data-question="4" data-option="3"><span class="letter">D</span><span class="opt-text">As primeiras linhas mostram como os dados foram registrados.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="5" data-correct="0"><h4>5. Qual produto está previsto para esta aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="5" data-option="0"><span class="letter">A</span><span class="opt-text">Tabela-resumo com nome das colunas, tipo de informação e 3 observações sobre a base.</span></button><button type="button" class="quiz-option" data-question="5" data-option="1"><span class="letter">B</span><span class="opt-text">Uma prova discursiva sobre todas as matérias.</span></button><button type="button" class="quiz-option" data-question="5" data-option="2"><span class="letter">C</span><span class="opt-text">A troca do style.css do template.</span></button><button type="button" class="quiz-option" data-question="5" data-option="3"><span class="letter">D</span><span class="opt-text">A exclusão das abas da planilha do projeto.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="6" data-correct="1"><h4>6. Qual ideia aparece no resumo desta aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="6" data-option="0"><span class="letter">A</span><span class="opt-text">Os avisos devem ser apagados após cada aula.</span></button><button type="button" class="quiz-option" data-question="6" data-option="1"><span class="letter">B</span><span class="opt-text">Formatos diferentes no mesmo campo atrapalham a análise posterior.</span></button><button type="button" class="quiz-option" data-question="6" data-option="2"><span class="letter">C</span><span class="opt-text">A disciplina não usa dados reais da escola.</span></button><button type="button" class="quiz-option" data-question="6" data-option="3"><span class="letter">D</span><span class="opt-text">O projeto não precisa de registros organizados.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="7" data-correct="2"><h4>7. Pensando na Central de Avisos, por que esta aula é importante?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="7" data-option="0"><span class="letter">A</span><span class="opt-text">Porque elimina a necessidade de interpretar os dados.</span></button><button type="button" class="quiz-option" data-question="7" data-option="1"><span class="letter">B</span><span class="opt-text">Porque substitui todas as outras etapas do bimestre.</span></button><button type="button" class="quiz-option" data-question="7" data-option="2"><span class="letter">C</span><span class="opt-text">Antes de limpar, precisamos olhar a base com atenção.</span></button><button type="button" class="quiz-option" data-question="7" data-option="3"><span class="letter">D</span><span class="opt-text">Porque torna desnecessário o uso de caderno e notebook.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="8" data-correct="3"><h4>8. Qual frase representa melhor a relação entre conteúdo e projeto nesta aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="8" data-option="0"><span class="letter">A</span><span class="opt-text">O projeto deve funcionar mesmo sem dados confiáveis.</span></button><button type="button" class="quiz-option" data-question="8" data-option="1"><span class="letter">B</span><span class="opt-text">A aula não depende do planejamento do bimestre.</span></button><button type="button" class="quiz-option" data-question="8" data-option="2"><span class="letter">C</span><span class="opt-text">O conteúdo da aula não tem ligação com a Central.</span></button><button type="button" class="quiz-option" data-question="8" data-option="3"><span class="letter">D</span><span class="opt-text">Pandas ajuda a transformar observação em análise organizada.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="9" data-correct="0"><h4>9. Qual evidência de aprendizagem foi prevista para esta aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="9" data-option="0"><span class="letter">A</span><span class="opt-text">Notebook de inspeção inicial da base da Central de Avisos.</span></button><button type="button" class="quiz-option" data-question="9" data-option="1"><span class="letter">B</span><span class="opt-text">Somente uma atividade oral sem registro.</span></button><button type="button" class="quiz-option" data-question="9" data-option="2"><span class="letter">C</span><span class="opt-text">Apenas alteração do calendário escolar.</span></button><button type="button" class="quiz-option" data-question="9" data-option="3"><span class="letter">D</span><span class="opt-text">Troca do arquivo modelo_index.html.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-card" data-question="10" data-correct="1"><h4>10. Qual alternativa apresenta uma leitura correta da aula?</h4><div class="quiz-options"><button type="button" class="quiz-option" data-question="10" data-option="0"><span class="letter">A</span><span class="opt-text">A aula abandona o projeto Central de Avisos.</span></button><button type="button" class="quiz-option" data-question="10" data-option="1"><span class="letter">B</span><span class="opt-text">Uma tabela em Pandas é chamada de DataFrame.</span></button><button type="button" class="quiz-option" data-question="10" data-option="2"><span class="letter">C</span><span class="opt-text">O conteúdo não usa nenhum dado escolar.</span></button><button type="button" class="quiz-option" data-question="10" data-option="3"><span class="letter">D</span><span class="opt-text">A proposta da aula é modificar o CSS original.</span></button></div><div class="quiz-feedback"></div></div><div class="quiz-footer"><button type="button" class="quiz-btn" id="restartQuiz">🔄 Reiniciar quiz</button><div class="quiz-result" id="quizResult"></div></div></div>
   </div>
 </div>
 
 <script>
 (function(){
-  const quizSection = document.querySelector('.quiz-section');
-  if(!quizSection) return;
+  const state = {points:0,correct:0,answered:0,errors:0,total:10};
+  const answered = {};
+  const pointsEl = document.getElementById('points');
+  const correctEl = document.getElementById('correct');
+  const answeredEl = document.getElementById('answered');
+  const levelEl = document.getElementById('level');
+  const progressEl = document.getElementById('progressFill');
+  const msgEl = document.getElementById('performanceMsg');
+  const errorsEl = document.getElementById('errorsCount');
+  const remainingEl = document.getElementById('remainingCount');
+  const resultEl = document.getElementById('quizResult');
 
-  const cards = Array.from(quizSection.querySelectorAll('.card'));
-  cards.forEach((card, index) => {
-    card.classList.add('question-card');
-    card.dataset.question = String(index + 1);
+  function levelFromPoints(points){
+    if(points >= 90) return 'Mestre';
+    if(points >= 70) return 'Ouro';
+    if(points >= 50) return 'Prata';
+    if(points >= 30) return 'Bronze';
+    return 'Início';
+  }
 
-    const title = card.querySelector('h2');
-    if (title) title.classList.add('quiz-question-title');
+  function performanceMessage(){
+    if(state.answered === 0) return 'Comece o quiz e acompanhe seu desempenho em tempo real!';
+    if(state.correct === state.total) return 'Perfeito! Você zerou o quiz e dominou a aula.';
+    if(state.correct >= Math.ceil(state.total*0.8)) return 'Ótimo desempenho! Você está muito próximo do domínio completo.';
+    if(state.correct >= Math.ceil(state.total*0.6)) return 'Bom caminho! Continue atento aos detalhes da aula.';
+    if(state.correct >= Math.ceil(state.total*0.4)) return 'Você já avançou. Revise o resumo para melhorar a pontuação.';
+    return 'Use o resumo da aula e tente evoluir sua pontuação.';
+  }
 
-    const questionText = card.querySelector('p');
-    if (questionText) questionText.classList.add('quiz-question-text');
+  function render(){
+    pointsEl.textContent = state.points;
+    correctEl.textContent = state.correct;
+    answeredEl.textContent = state.answered + '/' + state.total;
+    levelEl.textContent = levelFromPoints(state.points);
+    const pct = (state.answered / state.total) * 100;
+    progressEl.style.width = pct + '%';
+    msgEl.textContent = performanceMessage();
+    errorsEl.textContent = state.errors;
+    remainingEl.textContent = state.total - state.answered;
 
-    const optionsWrap = card.querySelector('div');
-    if (optionsWrap) optionsWrap.classList.add('quiz-options-wrap');
+    if(state.answered === state.total){
+      resultEl.classList.add('show');
+      resultEl.innerHTML = '<strong>Resultado final:</strong> ' + state.correct + ' acertos, ' + state.errors + ' erros e ' + state.points + ' pontos. <br><strong>Nível alcançado:</strong> ' + levelFromPoints(state.points) + '.';
+    } else {
+      resultEl.classList.remove('show');
+      resultEl.innerHTML = '';
+    }
+  }
 
-    card.querySelectorAll('button').forEach((btn, btnIndex) => {
-      btn.classList.add('quiz-option');
-      btn.dataset.option = String(btnIndex + 1);
-      btn.removeAttribute('style');
+  function answer(qIndex, optionIndex){
+    if(answered[qIndex]) return;
+    answered[qIndex] = true;
+    const card = document.querySelector('[data-question="'+qIndex+'"]');
+    const correct = Number(card.dataset.correct);
+    const options = card.querySelectorAll('.quiz-option');
+    const feedback = card.querySelector('.quiz-feedback');
+
+    options.forEach((opt, idx) => {
+      opt.classList.add('disabled');
+      if(idx === correct) opt.classList.add('correct');
+    });
+
+    if(optionIndex === correct){
+      state.points += 10;
+      state.correct += 1;
+      feedback.className = 'quiz-feedback correct show';
+      feedback.textContent = '✅ Acertou! Excelente leitura do conteúdo desta aula.';
+      options[optionIndex].classList.add('correct');
+    } else {
+      state.errors += 1;
+      feedback.className = 'quiz-feedback wrong show';
+      feedback.textContent = '❌ Não foi desta vez. Observe a alternativa correta destacada em verde.';
+      options[optionIndex].classList.add('wrong');
+    }
+    state.answered += 1;
+    render();
+  }
+
+  document.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      answer(btn.dataset.question, Number(btn.dataset.option));
     });
   });
 
-  const total = cards.length;
-  let respondidas = 0;
-  let acertos = 0;
-  let erros = 0;
-
-  const hud = document.createElement('div');
-  hud.className = 'quiz-hud';
-  hud.innerHTML = `
-    <div class="quiz-stats">
-      <div class="quiz-stat"><strong id="quiz-score">0</strong><span>Pontos</span></div>
-      <div class="quiz-stat"><strong id="quiz-right">0/${total}</strong><span>Acertos</span></div>
-      <div class="quiz-stat"><strong id="quiz-done">0/${total}</strong><span>Respondidas</span></div>
-      <div class="quiz-stat"><strong id="quiz-rank">🌱 Início</strong><span>Nível</span></div>
-    </div>
-    <div class="quiz-progress-wrap"><div id="quiz-progress" class="quiz-progress-bar"></div></div>
-    <div class="quiz-status-line">
-      <span id="quiz-message">Responda e acompanhe seu avanço!</span>
-      <span id="quiz-streak">Meta: acertar 7 ou mais.</span>
-    </div>
-  `;
-
-  const finalBox = document.createElement('div');
-  finalBox.className = 'quiz-final';
-  finalBox.id = 'quiz-final';
-  finalBox.innerHTML = `
-    <h3>🏁 Quiz concluído!</h3>
-    <p id="quiz-final-text"></p>
-    <button class="quiz-restart" onclick="reiniciarQuiz()">🔄 Tentar de novo</button>
-  `;
-
-  quizSection.insertBefore(hud, cards[0] || null);
-  quizSection.appendChild(finalBox);
-
-  function calcularNivel(){
-    const percentual = total ? (acertos / total) : 0;
-    if (percentual === 1) return '👑 Mestre';
-    if (percentual >= 0.8) return '🏆 Ouro';
-    if (percentual >= 0.6) return '🥈 Prata';
-    if (percentual >= 0.4) return '🥉 Bronze';
-    return '🌱 Início';
-  }
-
-  function atualizarHUD(){
-    const score = acertos * 10;
-    const percentual = total ? (respondidas / total) * 100 : 0;
-    document.getElementById('quiz-score').textContent = String(score);
-    document.getElementById('quiz-right').textContent = `${acertos}/${total}`;
-    document.getElementById('quiz-done').textContent = `${respondidas}/${total}`;
-    document.getElementById('quiz-rank').textContent = calcularNivel();
-    document.getElementById('quiz-progress').style.width = `${percentual}%`;
-
-    let message = 'Continue! Você está avançando.';
-    if (respondidas === 0) message = 'Responda e acompanhe seu avanço!';
-    else if (acertos === respondidas) message = 'Excelente! Você acertou todas até agora.';
-    else if (acertos >= Math.ceil(respondidas / 2)) message = 'Bom trabalho! Você está indo bem.';
-    else message = 'Siga firme! Revise e tente melhorar nas próximas.';
-    document.getElementById('quiz-message').textContent = message;
-    document.getElementById('quiz-streak').textContent = `Erros: ${erros} • Questões restantes: ${total - respondidas}`;
-  }
-
-  function finalizarQuiz(){
-    const finalBoxEl = document.getElementById('quiz-final');
-    const finalText = document.getElementById('quiz-final-text');
-    const percentual = total ? Math.round((acertos / total) * 100) : 0;
-
-    let mensagemFinal = `Você fez ${acertos} de ${total} pontos (${percentual}%). `;
-    if (percentual === 100) mensagemFinal += 'Desempenho perfeito! A Central de Avisos está em ótimas mãos.';
-    else if (percentual >= 80) mensagemFinal += 'Ótimo resultado! Você dominou muito bem o conteúdo.';
-    else if (percentual >= 60) mensagemFinal += 'Bom resultado! Vale revisar alguns pontos para avançar ainda mais.';
-    else mensagemFinal += 'Você começou bem. Revise o conteúdo e tente novamente para subir de nível.';
-    finalText.textContent = mensagemFinal;
-    finalBoxEl.style.display = 'block';
-  }
-
-  window.marcarResposta = function(botao, correta){
-    const card = botao.closest('.question-card');
-    if (!card || card.dataset.locked === 'true') return;
-
-    card.dataset.locked = 'true';
-    respondidas += 1;
-
-    const botoes = card.querySelectorAll('button');
-    botoes.forEach(btn => {
-      btn.disabled = true;
-      btn.classList.add('is-disabled');
-    });
-
-    if (correta) {
-      acertos += 1;
-      botao.classList.add('is-correct');
-      card.classList.add('is-correct');
-    } else {
-      erros += 1;
-      botao.classList.add('is-wrong');
-      card.classList.add('is-wrong');
-      const corretaBtn = Array.from(botoes).find(btn => /true\)/.test(btn.getAttribute('onclick') || ''));
-      if (corretaBtn) corretaBtn.classList.add('is-correct');
-    }
-
-    atualizarHUD();
-    if (respondidas === total) finalizarQuiz();
-  };
-
-  window.reiniciarQuiz = function(){
-    respondidas = 0;
-    acertos = 0;
-    erros = 0;
-    cards.forEach(card => {
-      card.dataset.locked = 'false';
-      card.classList.remove('is-correct', 'is-wrong');
-      card.querySelectorAll('button').forEach(btn => {
-        btn.disabled = false;
-        btn.classList.remove('is-disabled', 'is-correct', 'is-wrong');
+  document.getElementById('restartQuiz').addEventListener('click', () => {
+    state.points = 0; state.correct = 0; state.answered = 0; state.errors = 0;
+    Object.keys(answered).forEach(k => delete answered[k]);
+    document.querySelectorAll('.quiz-card').forEach(card => {
+      card.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.classList.remove('correct','wrong','disabled');
       });
+      const feedback = card.querySelector('.quiz-feedback');
+      feedback.className = 'quiz-feedback';
+      feedback.textContent = '';
     });
-    document.getElementById('quiz-final').style.display = 'none';
-    atualizarHUD();
-    window.scrollTo({ top: quizSection.offsetTop - 16, behavior: 'smooth' });
-  };
+    render();
+    window.scrollTo({top: document.querySelector('.quiz-section').offsetTop - 20, behavior:'smooth'});
+  });
 
-  atualizarHUD();
+  render();
 })();
 </script>
 
