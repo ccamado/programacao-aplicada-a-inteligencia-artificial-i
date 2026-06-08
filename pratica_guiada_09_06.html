@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prática Guiada — Conectando o Python à planilha real da Central de Avisos</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.code-box{background:#1F0A3C;color:#fff;border-radius:16px;padding:18px;margin:16px 0;overflow:auto;box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.code-box code,.code-box pre{white-space:pre-wrap;font-family:Consolas,Monaco,monospace;font-size:.96rem;line-height:1.6}
+.step-tag{display:inline-block;background:linear-gradient(90deg,#FFF7ED,#FFEDD5);color:#C2410C;border:1px solid #FB923C;border-radius:999px;padding:6px 12px;font-weight:800;font-size:.82rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.checklist{padding-left:20px}
+.checklist li{margin-bottom:8px;line-height:1.6}
+.highlight-quote{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border:2px solid #A855F7;border-radius:16px;padding:18px;font-weight:700;color:#4C1D95;margin:16px 0}
+@media (max-width:700px){.info-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="index.html" class="btn-back">← Voltar ao Menu</a>
+<div class="aula-container">
+  <div class="aula-hero">
+    <div class="aula-num">PRÁTICA GUIADA · SEMANA 6</div>
+    <h1>🔗 Conectando o Python à planilha real da Central de Avisos</h1>
+    <div class="aula-meta">
+      <span>📅 09/06/2026</span>
+      <span>⏱ 50 min</span>
+      <span>🧪 Laboratório</span>
+      <span>🎯 Central de Avisos</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 O que você vai fazer nesta prática?</h2>
+    <p>Nesta prática, você vai usar a <strong>planilha real da Central de Avisos</strong> para aprender a conectar o Python ao Google Sheets, ler a aba correta, identificar colunas, contar os tipos de aviso e criar um gráfico simples com os dados da turma.</p>
+    <div class="destaque">Hoje você não vai inventar uma base. Você vai trabalhar com a base verdadeira que a turma já utiliza no projeto.</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="card azul">
+      <h2>🧰 Bibliotecas da prática</h2>
+      <ul class="checklist">
+        <li><strong>Pandas</strong> para ler a planilha e trabalhar com tabela.</li>
+        <li><strong>Numpy</strong> para organizar números em array.</li>
+        <li><strong>Matplotlib</strong> para gerar um gráfico.</li>
+      </ul>
+    </div>
+    <div class="card verde">
+      <h2>✅ Produto final</h2>
+      <ul class="checklist">
+        <li>Link correto da aba AVISOS montado por você.</li>
+        <li>Planilha lida no Python.</li>
+        <li>Contagem dos tipos de aviso.</li>
+        <li>Gráfico simples com os dados da Central.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card roxo">
+    <h2>📘 Antes de começar: entenda a ideia principal</h2>
+    <p>A planilha da Central de Avisos pode ter mais de uma aba, como <strong>AVISOS</strong> e <strong>HORARIO_SEMANAL</strong>. O Python precisa saber exatamente <strong>qual aba</strong> você quer ler. Por isso, não basta copiar qualquer link da planilha. Você precisa montar o <strong>link certo da aba</strong>.</p>
+    <div class="highlight-quote">Pense assim: a planilha é como um caderno com várias divisórias. O Python precisa saber qual divisória você quer abrir.</div>
+  </div>
+
+  <div class="card">
+    <div class="step-tag">Passo 1</div>
+    <h2>Importe as bibliotecas</h2>
+    <p>Copie e execute este código:</p>
+    <div class="code-box"><pre><code>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt</code></pre></div>
+    <p><strong>O que esse código faz?</strong></p>
+    <ul class="checklist">
+      <li><code>pandas as pd</code> importa a biblioteca de tabelas.</li>
+      <li><code>numpy as np</code> importa a biblioteca de números.</li>
+      <li><code>matplotlib.pyplot as plt</code> importa a biblioteca de gráficos.</li>
+    </ul>
+    <div class="destaque">Se nada aparecer na tela, está tudo certo. Isso significa que as bibliotecas foram carregadas.</div>
+  </div>
+
+  <div class="card">
+    <div class="step-tag">Passo 2</div>
+    <h2>Abra a planilha e clique na aba certa</h2>
+    <p>Agora abra a planilha da <strong>Central de Avisos</strong> no Google Sheets.</p>
+    <ol class="checklist">
+      <li>Olhe para as abas na parte de baixo da planilha.</li>
+      <li>Clique na aba <strong>AVISOS</strong>.</li>
+      <li>Somente depois de abrir essa aba, observe o link do navegador.</li>
+    </ol>
+    <div class="destaque">Hoje você vai trabalhar com a aba <strong>AVISOS</strong>.</div>
+  </div>
+
+  <div class="card azul">
+    <div class="step-tag">Passo 3</div>
+    <h2>Encontre o ID da planilha</h2>
+    <p>Com a aba AVISOS aberta, olhe para o link do navegador. Ele será parecido com este:</p>
+    <div class="code-box"><pre><code>https://docs.google.com/spreadsheets/d/1ABCxyz1234567890/edit#gid=0</code></pre></div>
+    <p>O <strong>ID da planilha</strong> é a parte que fica entre <code>/d/</code> e <code>/edit</code>.</p>
+    <div class="code-box"><pre><code>1ABCxyz1234567890</code></pre></div>
+    <p>Agora registre no seu caderno ou notebook:</p>
+    <div class="conceito-box"><strong>Meu ID da planilha é:</strong> ______________________________________</div>
+  </div>
+
+  <div class="card verde">
+    <div class="step-tag">Passo 4</div>
+    <h2>Encontre o gid da aba</h2>
+    <p>No final do link aparece algo como <code>#gid=0</code>. Esse número identifica a aba que está aberta.</p>
+    <div class="code-box"><pre><code>#gid=0</code></pre></div>
+    <p>Se você mudar de aba, esse número pode mudar. Por isso, confirme de novo que a aba <strong>AVISOS</strong> está aberta.</p>
+    <div class="conceito-box"><strong>O gid da aba AVISOS é:</strong> ______________________________________</div>
+  </div>
+
+  <div class="card roxo">
+    <div class="step-tag">Passo 5</div>
+    <h2>Monte o link que o Python consegue ler</h2>
+    <p>O Google Sheets usa um link comum para você navegar, mas o Python precisa de um link em formato <strong>CSV</strong>.</p>
+    <p>Use este modelo:</p>
+    <div class="code-box"><pre><code>https://docs.google.com/spreadsheets/d/ID_DA_PLANILHA/export?format=csv&gid=ID_DA_ABA</code></pre></div>
+    <p>Se o seu ID for <code>1ABCxyz1234567890</code> e o gid for <code>0</code>, o link fica assim:</p>
+    <div class="code-box"><pre><code>https://docs.google.com/spreadsheets/d/1ABCxyz1234567890/export?format=csv&gid=0</code></pre></div>
+    <div class="conceito-box"><strong>Meu link final da aba AVISOS é:</strong><br><br>______________________________________________________________</div>
+  </div>
+
+  <div class="card">
+    <div class="step-tag">Passo 6</div>
+    <h2>Coloque o link no código</h2>
+    <p>Agora copie e execute, trocando pelo seu link real:</p>
+    <div class="code-box"><pre><code>url = "COLE_AQUI_O_LINK_FINAL_DA_ABA_AVISOS"</code></pre></div>
+    <p>Exemplo:</p>
+    <div class="code-box"><pre><code>url = "https://docs.google.com/spreadsheets/d/1ABCxyz1234567890/export?format=csv&gid=0"</code></pre></div>
+    <p>Esse código cria uma variável chamada <code>url</code> e guarda nela o endereço da planilha que o Python vai ler.</p>
+  </div>
+
+  <div class="card azul">
+    <div class="step-tag">Passo 7</div>
+    <h2>Leia a planilha com Pandas</h2>
+    <p>Copie e execute:</p>
+    <div class="code-box"><pre><code>df = pd.read_csv(url)
+print(df)</code></pre></div>
+    <p><strong>Como esse código funciona?</strong></p>
+    <ul class="checklist">
+      <li><code>pd.read_csv(url)</code> lê os dados do link.</li>
+      <li><code>df</code> é o nome que você está dando para a tabela.</li>
+      <li><code>print(df)</code> mostra a tabela na tela.</li>
+    </ul>
+    <div class="destaque">Se a tabela aparecer, isso significa que você conseguiu conectar o Python à planilha real da Central.</div>
+  </div>
+
+  <div class="card verde">
+    <div class="step-tag">Passo 8</div>
+    <h2>Olhe as primeiras linhas e veja os nomes das colunas</h2>
+    <p>Copie e execute:</p>
+    <div class="code-box"><pre><code>df.head()
+print(df.columns)</code></pre></div>
+    <p>Agora observe:</p>
+    <ul class="checklist">
+      <li>quais colunas existem;</li>
+      <li>como o nome da coluna de tipo está escrito;</li>
+      <li>se o nome está como <code>tipo</code>, <code>Tipo</code> ou outro formato.</li>
+    </ul>
+    <div class="highlight-quote">Você precisa usar no código o nome da coluna exatamente como ele aparece na planilha.</div>
+  </div>
+
+  <div class="card roxo">
+    <div class="step-tag">Passo 9</div>
+    <h2>Conte quantos avisos existem de cada tipo</h2>
+    <p>Se a sua coluna se chamar <code>tipo</code>, copie e execute:</p>
+    <div class="code-box"><pre><code>contagem_tipos = df["tipo"].value_counts()
+print(contagem_tipos)</code></pre></div>
+    <p>Se o nome da coluna for diferente, troque pelo nome real. Exemplo:</p>
+    <div class="code-box"><pre><code>contagem_tipos = df["Tipo"].value_counts()
+print(contagem_tipos)</code></pre></div>
+    <p><strong>O que esse código faz?</strong></p>
+    <ul class="checklist">
+      <li><code>df["tipo"]</code> pega só a coluna do tipo de aviso.</li>
+      <li><code>.value_counts()</code> conta quantas vezes cada valor aparece.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="step-tag">Passo 10</div>
+    <h2>Transforme as contagens em array com Numpy</h2>
+    <p>Copie e execute:</p>
+    <div class="code-box"><pre><code>valores = np.array(contagem_tipos.values)
+print(valores)</code></pre></div>
+    <p>Aqui você está:</p>
+    <ul class="checklist">
+      <li>pegando só os números da contagem;</li>
+      <li>transformando esses números em um array do Numpy.</li>
+    </ul>
+    <p>Agora copie e execute também:</p>
+    <div class="code-box"><pre><code>tipos = contagem_tipos.index
+print(tipos)</code></pre></div>
+    <p>Com isso, você terá:</p>
+    <ul class="checklist">
+      <li><code>tipos</code> = nomes das categorias</li>
+      <li><code>valores</code> = quantidades</li>
+    </ul>
+  </div>
+
+  <div class="card azul">
+    <div class="step-tag">Passo 11</div>
+    <h2>Crie o gráfico</h2>
+    <p>Copie e execute:</p>
+    <div class="code-box"><pre><code>plt.figure(figsize=(8,5))
+plt.bar(tipos, valores)
+plt.title("Quantidade de avisos por tipo")
+plt.xlabel("Tipo de aviso")
+plt.ylabel("Quantidade")
+plt.show()</code></pre></div>
+    <p><strong>O que cada linha faz?</strong></p>
+    <ul class="checklist">
+      <li><code>plt.figure(figsize=(8,5))</code> cria a área do gráfico.</li>
+      <li><code>plt.bar(tipos, valores)</code> cria as barras.</li>
+      <li><code>plt.title(...)</code> define o título.</li>
+      <li><code>plt.xlabel(...)</code> nomeia o eixo horizontal.</li>
+      <li><code>plt.ylabel(...)</code> nomeia o eixo vertical.</li>
+      <li><code>plt.show()</code> mostra o gráfico na tela.</li>
+    </ul>
+  </div>
+
+  <div class="card verde">
+    <div class="step-tag">Passo 12</div>
+    <h2>Interprete o resultado</h2>
+    <p>Agora responda no caderno ou no notebook:</p>
+    <ol class="checklist">
+      <li>Qual tipo de aviso apareceu mais?</li>
+      <li>Qual apareceu menos?</li>
+      <li>O gráfico ficou mais fácil de entender do que a tabela? Por quê?</li>
+      <li>O que esse resultado mostra sobre a rotina da Central de Avisos?</li>
+    </ol>
+  </div>
+
+  <div class="caderno-section">
+    <h3>📝 Resumo para o Caderno — Prática Guiada</h3>
+    <ol>
+      <li>O Python pode ler uma planilha real do Google Sheets.</li>
+      <li>Para isso, eu preciso escolher a aba correta.</li>
+      <li>O ID da planilha identifica o arquivo inteiro.</li>
+      <li>O gid identifica a aba que está aberta.</li>
+      <li>O link normal precisa ser transformado em link CSV.</li>
+      <li>O Pandas lê a planilha e transforma os dados em tabela.</li>
+      <li>O value_counts conta quantas vezes cada tipo aparece.</li>
+      <li>O Numpy organiza as quantidades em array.</li>
+      <li>O Matplotlib transforma os números em gráfico.</li>
+      <li>Com isso, eu consigo analisar a Central de Avisos com dados reais.</li>
+    </ol>
+  </div>
+
+  <div class="card roxo">
+    <h2>💻 Código completo da prática</h2>
+    <div class="code-box"><pre><code>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+url = "COLE_AQUI_O_LINK_FINAL_DA_ABA_AVISOS"
+
+df = pd.read_csv(url)
+
+print("Tabela completa:")
+print(df)
+
+print("\nPrimeiras linhas:")
+print(df.head())
+
+print("\nColunas da planilha:")
+print(df.columns)
+
+contagem_tipos = df["tipo"].value_counts()
+print("\nContagem por tipo:")
+print(contagem_tipos)
+
+valores = np.array(contagem_tipos.values)
+print("\nArray com as quantidades:")
+print(valores)
+
+tipos = contagem_tipos.index
+print("\nCategorias:")
+print(tipos)
+
+plt.figure(figsize=(8,5))
+plt.bar(tipos, valores)
+plt.title("Quantidade de avisos por tipo")
+plt.xlabel("Tipo de aviso")
+plt.ylabel("Quantidade")
+plt.show()</code></pre></div>
+  </div>
+</div>
+<footer>
+  <p><strong>Programação Aplicada à Inteligência Artificial I</strong> · 2º ano do Ensino Médio · EE Manoel Bonifácio Nunes da Cunha</p>
+  <p style="margin-top:6px;">Projeto integrador: Central de Avisos</p>
+</footer>
+</body>
+</html>
